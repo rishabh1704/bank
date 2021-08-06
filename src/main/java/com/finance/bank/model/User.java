@@ -26,7 +26,7 @@ public class User {
     @JoinColumn(name = "address_id")
     private Address address;
 
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "contact_id")
     private Contact contact;
 

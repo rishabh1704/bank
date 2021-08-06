@@ -2,7 +2,7 @@ package com.finance.bank.bootstrap;
 
 import com.finance.bank.model.*;
 import com.finance.bank.repositories.*;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 import javax.transaction.Transactional;
 import java.util.*;
 
-@Slf4j
+@Log4j2
 @Component
 public class BankingBootstrap implements ApplicationListener<ContextRefreshedEvent> {
     // inject repositories
@@ -21,7 +21,9 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
     private AddressRepository addressRepository;
     private ContactRepository contactRepository;
 
-    public BankingBootstrap(AccountRepository accountRepository, CustomerRepository customerRepository, EmployeeRepository employeeRepository, TransactionRepository transactionRepository, AddressRepository addressRepository, ContactRepository contactRepository) {
+    public BankingBootstrap(AccountRepository accountRepository, CustomerRepository customerRepository,
+                            EmployeeRepository employeeRepository, TransactionRepository transactionRepository,
+                            AddressRepository addressRepository, ContactRepository contactRepository) {
         this.accountRepository = accountRepository;
         this.customerRepository = customerRepository;
         this.employeeRepository = employeeRepository;
@@ -37,6 +39,15 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             log.debug("Loading Init Data.");
             getCustomers();
         }
+
+        if (true) {
+            log.debug("Init for Employees now.");
+            getEmployees();
+        }
+    }
+
+    void getEmployees() {
+
     }
 
     void getCustomers() {

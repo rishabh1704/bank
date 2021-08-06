@@ -5,11 +5,11 @@ import org.springframework.http.ResponseEntity;
 
 public interface EmployeeService {
 
-    public ResponseEntity<Object> editCustomer(long customerId, CustomerDTO data);
+    public ResponseEntity<Object> updateCustomer(long customerId, CustomerDTO data);
 
-    public ResponseEntity<Object> transferMoney(Long fromAccountId, Long toAccountId, Double amount);
-
-    public ResponseEntity<Object> createCustomer(long customerId, CustomerDTO data);
+    public Long createCustomer(CustomerDTO data);
 
     public ResponseEntity<Object> deleteCustomer(long customerId);
+
+    public ResponseEntity<Object> createNewAccount(long customerId);
 }

@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 
 public interface EmployeeService {
 
-    public ResponseEntity<Object> updateCustomer(long customerId, CustomerDTO data);
+    public String updateCustomer(long customerId, CustomerDTO data);
 
     public Long createCustomer(CustomerDTO data);
 

@@ -12,6 +12,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,11 +50,43 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<Object> updateCustomer(long customerId, CustomerDTO data) {
-        return null;
+    @Transactional
+    public String updateCustomer(long customerId, CustomerDTO data) {
+        Customer customer = this.customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+//            customer not found
+            return "No such customer exists in our database";
+        }
+
+//        Identification number can never be changed even in the update
+//        Manually set all fields and then update in db as if the whole new object is saved then the mappings are forgotten
+//        and new mappings must be found
+
+//        Todo: validation is required, and send which fields can not be changed to the employee
+        customer.setCustomerType(CustomerType.valueOf(data.getCustomerType()));
+        customer.setFirstName(data.getFirstName());
+        customer.setLastName(data.getLastName());
+
+//        setting the address fields
+        customer.getAddress().setLine1(data.getAddress().getLine1());
+        customer.getAddress().setLine2(data.getAddress().getLine2());
+        customer.getAddress().setCity(data.getAddress().getCity());
+        customer.getAddress().setState(data.getAddress().getState());
+        customer.getAddress().setPinCode(data.getAddress().getPinCode());
+
+//        setting the contact fields
+        customer.getContact().setEmail(data.getContact().getEmail());
+        customer.getContact().setPhone(data.getContact().getPhone());
+
+//        account is managed internally so can't be changed on user's request
+
+        this.customerRepository.save(customer);
+
+        return "Updated the information Successfully!";
     }
 
     @Override
+    @Transactional
     public Long createCustomer(CustomerDTO data) {
 //        by default a single account of savings type is opened.
         Customer customer = this.customerDtoToCustomer.convert(data);

@@ -5,10 +5,7 @@ import com.finance.bank.services.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("employees")
@@ -29,6 +26,13 @@ public class EmployeeController {
     public ResponseEntity<Object> createNewCustomer(@RequestBody CustomerDTO data) {
         Long id = this.employeeService.createCustomer(data);
         return ResponseEntity.status(HttpStatus.OK).body("Your Customer id is : " + id.toString());
+    }
+
+    @PostMapping("/update_customer/{id}")
+    public ResponseEntity<Object> updateCustomer(@PathVariable(name = "id") Long id, @RequestBody CustomerDTO data) {
+        String msg = this.employeeService.updateCustomer(id, data);
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
+
     }
 
 }

@@ -142,7 +142,21 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<Object> deleteAccount(Long customerId, Long accountId) {
-        return null;
+    public String deleteAccount(Long customerId, Long accountId) {
+        Customer customer = this.customerRepository.findCustomerById(customerId);
+
+        if (customer == null) {
+            return "No such customer";
+        }
+
+        Account account = this.accountRepository.findAccountById(accountId);
+
+        if (account == null) {
+            return "No such account";
+        }
+
+        this.accountRepository.delete(account);
+
+        return "Account wiped!";
     }
 }

@@ -22,14 +22,14 @@ public class Transaction {
     private Boolean isNotified = false;
     private Date transactionDate;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "account_id")
     private Account account;
 
     private Double amount;
 
 //    either use transient or mapping
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "to_account_id")
     private Account toAccount;
 }

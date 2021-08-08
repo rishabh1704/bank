@@ -1,6 +1,7 @@
 package com.finance.bank.controllers;
 
 import com.finance.bank.dto.CustomerDTO;
+import com.finance.bank.dto.TransientInfo;
 import com.finance.bank.services.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -44,6 +45,12 @@ public class EmployeeController {
     public ResponseEntity<Object> createAccount(@PathVariable(name = "id") Long customerId) {
         Long id = this.employeeService.createNewAccount(customerId);
         return ResponseEntity.status(HttpStatus.OK).body("Account created with id : " + id.toString());
+    }
+
+    @PostMapping("/delete_account")
+    public ResponseEntity<Object> deleteAccount(@RequestBody TransientInfo data) {
+        String msg = this.employeeService.deleteAccount(data.getCustomerId(), data.getAccountId());
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 
 }

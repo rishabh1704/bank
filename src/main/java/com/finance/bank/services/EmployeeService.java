@@ -13,5 +13,5 @@ public interface EmployeeService {
 
     public Long createNewAccount(long customerId);
 
-    public ResponseEntity<Object> deleteAccount(Long customerId, Long accountId);
+    public String deleteAccount(Long customerId, Long accountId);
 }

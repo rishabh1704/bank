@@ -129,8 +129,16 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<Object> createNewAccount(long customerId) {
-        return null;
+    public Long createNewAccount(long customerId) {
+        Customer customer = this.customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            return -1L;
+        }
+
+        Account account = accountCreationUtil(customer);
+        this.accountRepository.save(account);
+
+        return account.getId();
     }
 
     @Override

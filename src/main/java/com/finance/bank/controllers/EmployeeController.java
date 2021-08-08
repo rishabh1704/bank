@@ -40,4 +40,10 @@ public class EmployeeController {
         return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
+    @GetMapping("/create_account/{id}")
+    public ResponseEntity<Object> createAccount(@PathVariable(name = "id") Long customerId) {
+        Long id = this.employeeService.createNewAccount(customerId);
+        return ResponseEntity.status(HttpStatus.OK).body("Account created with id : " + id.toString());
+    }
+
 }

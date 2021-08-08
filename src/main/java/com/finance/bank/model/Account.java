@@ -30,7 +30,7 @@ public class Account {
 
     private Double balance;
 
-    @OneToMany(mappedBy = "account")
+    @OneToMany(mappedBy = "account", cascade = {CascadeType.ALL})
     private Set<Transaction> transactions;
 
 }

@@ -9,7 +9,9 @@ public interface EmployeeService {
 
     public Long createCustomer(CustomerDTO data);
 
-    public ResponseEntity<Object> deleteCustomer(long customerId);
+    public String deleteCustomer(long customerId);
 
     public ResponseEntity<Object> createNewAccount(long customerId);
+
+    public ResponseEntity<Object> deleteAccount(Long customerId, Long accountId);
 }

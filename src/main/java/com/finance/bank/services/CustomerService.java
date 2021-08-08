@@ -17,4 +17,6 @@ public interface CustomerService {
     public CustomerDTO viewPersonalDetails(long customerId);
 
     public String getNotifications(Long customerId);
+
+//    add money and withdraw money.
 }

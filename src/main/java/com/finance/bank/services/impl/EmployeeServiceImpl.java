@@ -117,12 +117,24 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public ResponseEntity<Object> deleteCustomer(long customerId) {
-        return null;
+    public String deleteCustomer(long customerId) {
+        Customer customer = this.customerRepository.findCustomerById(customerId);
+        if (customer == null) {
+            return "Can't find the customer you are looking for.";
+        }
+
+        this.customerRepository.delete(customer);
+
+        return "The customer has been wiped from the database.";
     }
 
     @Override
     public ResponseEntity<Object> createNewAccount(long customerId) {
+        return null;
+    }
+
+    @Override
+    public ResponseEntity<Object> deleteAccount(Long customerId, Long accountId) {
         return null;
     }
 }

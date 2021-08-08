@@ -18,7 +18,7 @@ public class Address {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToMany(mappedBy = "address")
+    @OneToMany(mappedBy = "address", cascade = {CascadeType.ALL})
     private Set<User> user = new HashSet<>();
 
     private String line1;

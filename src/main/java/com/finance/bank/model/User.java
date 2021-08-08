@@ -22,7 +22,7 @@ public class User {
     private String lastName;
     private String identificationNumber;
 
-    @ManyToOne
+    @ManyToOne(cascade = {CascadeType.ALL})
     @JoinColumn(name = "address_id")
     private Address address;
 

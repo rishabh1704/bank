@@ -32,7 +32,12 @@ public class EmployeeController {
     public ResponseEntity<Object> updateCustomer(@PathVariable(name = "id") Long id, @RequestBody CustomerDTO data) {
         String msg = this.employeeService.updateCustomer(id, data);
         return ResponseEntity.status(HttpStatus.OK).body(msg);
+    }
 
+    @DeleteMapping("/delete_customer/{id}")
+    public ResponseEntity<Object> deleteCustomer(@PathVariable(name = "id") Long id) {
+        String message = this.employeeService.deleteCustomer(id);
+        return ResponseEntity.status(HttpStatus.OK).body(message);
     }
 
 }

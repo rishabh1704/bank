@@ -14,7 +14,7 @@ import java.util.Set;
 @Entity
 public class Customer extends User {
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = {CascadeType.ALL})
     private Set<Account> account = new HashSet<>();
 
     @Enumerated(EnumType.STRING)

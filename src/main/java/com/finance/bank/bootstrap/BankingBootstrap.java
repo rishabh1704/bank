@@ -40,14 +40,38 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             getCustomers();
         }
 
-        if (true) {
+        if (false) {
             log.debug("Init for Employees now.");
             getEmployees();
         }
     }
 
     void getEmployees() {
+        Employee employee = new Employee();
+        employee.setPermissions("RW");
 
+        Address address1 = new Address();
+        address1.setCity("Sri Ganganagar");
+        address1.setLine1("sadhu wali cantt");
+        address1.setLine2("kothi ilaka");
+        address1.setState("Rajasthan");
+        address1.setPinCode("345678");
+        this.addressRepository.save(address1);
+
+        employee.setAddress(address1);
+        employee.setFirstName("Rahul");
+        employee.setLastName("Dravid");
+        employee.setIdentificationNumber("some_random_strategy_to_be_decided");
+
+        Contact contact1 = new Contact();
+        contact1.setEmail("rahul@bank.com");
+        contact1.setPhone("3049858346");
+        contact1.setUser(employee);
+
+        this.contactRepository.save(contact1);
+        employee.setContact(contact1);
+
+        this.employeeRepository.save(employee);
     }
 
     void getCustomers() {

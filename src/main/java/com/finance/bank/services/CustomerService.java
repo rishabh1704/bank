@@ -1,6 +1,7 @@
 package com.finance.bank.services;
 
 
+import com.finance.bank.dto.CashTransactionDTO;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransactionDTO;
 
@@ -18,5 +19,7 @@ public interface CustomerService {
 
     public String getNotifications(Long customerId);
 
-//    add money and withdraw money.
+    public String addFunds(CashTransactionDTO data);
+
+    public String withdrawFunds(CashTransactionDTO data);
 }

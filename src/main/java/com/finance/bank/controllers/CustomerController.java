@@ -1,5 +1,6 @@
 package com.finance.bank.controllers;
 
+import com.finance.bank.dto.CashTransactionDTO;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransactionDTO;
 import com.finance.bank.services.CustomerService;
@@ -54,6 +55,12 @@ public class CustomerController {
     @GetMapping("/notifications")
     public String getNotifications(@RequestBody Long customerId) {
         return this.customerService.getNotifications(customerId);
+    }
+
+    @PostMapping("/add_money")
+    public ResponseEntity<Object> addMoney(@RequestBody CashTransactionDTO data) {
+        String msg = this.customerService.addFunds(data);
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 
 }

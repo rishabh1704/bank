@@ -1,5 +1,6 @@
 package com.finance.bank.services.impl;
 
+import com.finance.bank.dto.CashTransactionDTO;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransactionDTO;
 import com.finance.bank.mappers.CustomerToCustomerDTO;
@@ -170,5 +171,50 @@ public class CustomerServiceImpl implements CustomerService {
         }
 
         return result;
+    }
+
+    @Override
+    public String addFunds(CashTransactionDTO data) {
+        Customer customer = this.customerRepository.findCustomerById(data.getCustomerId());
+
+        if (customer == null) {
+            return "This customer doesn't exist";
+        }
+
+        Account account = this.accountRepository.findAccountById(data.getAccountId());
+
+        if (account == null) {
+            return "Such an account doesn't exists";
+        }
+
+//        Todo: do similar authorization of all other classes.
+//        maybe wrap this functionality into a separate class
+        if (account.getOwner().getId() != customer.getId()) {
+            return "Not authorized to do this transaction";
+        }
+
+        Double amount = data.getAmount();
+
+//        create a transaction
+        Transaction transaction = new Transaction();
+
+//        cash addition to self from and to account number remains the same.
+
+        transaction.setTransactionDate(new Date());
+        transaction.setAmount(amount);
+        transaction.setIsNotified(false);
+        transaction.setAccount(account);
+        transaction.setToAccount(account);
+        this.transactionRepository.save(transaction);
+
+        account.setBalance(account.getBalance() + amount);
+        this.accountRepository.save(account);
+
+        return "Funds addition successful";
+    }
+
+    @Override
+    public String withdrawFunds(CashTransactionDTO data) {
+        return null;
     }
 }

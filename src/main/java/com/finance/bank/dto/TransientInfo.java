@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class TransientInfo {
-
     private Long customerId;
     private Long accountId;
+    private Long employeeId;
 }

@@ -3,6 +3,7 @@ package com.finance.bank.services.impl;
 import com.finance.bank.dto.CashTransactionDTO;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransactionDTO;
+import com.finance.bank.dto.TransientInfo;
 import com.finance.bank.mappers.CustomerToCustomerDTO;
 import com.finance.bank.mappers.TransactionToTransactionDTO;
 import com.finance.bank.model.Account;
@@ -11,6 +12,7 @@ import com.finance.bank.model.Transaction;
 import com.finance.bank.repositories.AccountRepository;
 import com.finance.bank.repositories.CustomerRepository;
 import com.finance.bank.repositories.TransactionRepository;
+import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,16 +26,18 @@ public class CustomerServiceImpl implements CustomerService {
     private final CustomerRepository customerRepository;
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
+    private final AuthorizationService authorizationService;
 
     private final CustomerToCustomerDTO customerToCustomerDTO;
     private final TransactionToTransactionDTO transactionToTransactionDTO;
 
     public CustomerServiceImpl(CustomerRepository customerRepository, AccountRepository accountRepository,
                                TransactionRepository transactionRepository, CustomerToCustomerDTO customerToCustomerDTO,
-                               TransactionToTransactionDTO transactionToTransactionDTO) {
+                               TransactionToTransactionDTO transactionToTransactionDTO, AuthorizationService authorizationService) {
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
+        this.authorizationService = authorizationService;
 
         this.customerToCustomerDTO = customerToCustomerDTO;
         this.transactionToTransactionDTO = transactionToTransactionDTO;
@@ -92,7 +96,7 @@ public class CustomerServiceImpl implements CustomerService {
 //                mapping
                 from.setAccount(fromAccountObj);
                 from.setToAccount(toAccountObj);
-                from.setAmount(amount);
+                from.setAmount(-1*amount);
                 from.setIsNotified(false);
                 from.setTransactionDate(curr);
                 this.transactionRepository.save(from);
@@ -175,23 +179,11 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String addFunds(CashTransactionDTO data) {
+        TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null);
+        if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
+
         Customer customer = this.customerRepository.findCustomerById(data.getCustomerId());
-
-        if (customer == null) {
-            return "This customer doesn't exist";
-        }
-
         Account account = this.accountRepository.findAccountById(data.getAccountId());
-
-        if (account == null) {
-            return "Such an account doesn't exists";
-        }
-
-//        Todo: do similar authorization of all other classes.
-//        maybe wrap this functionality into a separate class
-        if (account.getOwner().getId() != customer.getId()) {
-            return "Not authorized to do this transaction";
-        }
 
         Double amount = data.getAmount();
 
@@ -207,6 +199,7 @@ public class CustomerServiceImpl implements CustomerService {
         transaction.setToAccount(account);
         this.transactionRepository.save(transaction);
 
+//        update balance
         account.setBalance(account.getBalance() + amount);
         this.accountRepository.save(account);
 
@@ -215,6 +208,30 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String withdrawFunds(CashTransactionDTO data) {
-        return null;
+        TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null);
+        if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
+
+        Customer customer = this.customerRepository.findCustomerById(data.getCustomerId());
+        Account account = this.accountRepository.findAccountById(data.getAccountId());
+        Double amount = data.getAmount();
+        Double balance = account.getBalance();
+
+        if (Double.compare(amount, balance) > 0) {
+            return "Insufficient funds.";
+        }
+
+//        make transaction
+        Transaction transaction = new Transaction();
+        transaction.setTransactionDate(new Date());
+        transaction.setAmount(-1*amount);
+        transaction.setIsNotified(false);
+        transaction.setAccount(account);
+        transaction.setToAccount(account);
+        this.transactionRepository.save(transaction);
+
+        account.setBalance(account.getBalance() - amount);
+        this.accountRepository.save(account);
+
+        return "Funds withdrawal successful";
     }
 }

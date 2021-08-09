@@ -63,4 +63,10 @@ public class CustomerController {
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 
+    @PostMapping("/withdraw_money")
+    public ResponseEntity<Object> withdrawMoney(@RequestBody CashTransactionDTO data) {
+        String msg = this.customerService.withdrawFunds(data);
+        return ResponseEntity.status(HttpStatus.OK).body(msg);
+    }
+
 }

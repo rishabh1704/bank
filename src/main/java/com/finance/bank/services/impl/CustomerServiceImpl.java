@@ -74,7 +74,7 @@ public class CustomerServiceImpl implements CustomerService {
         return result;
     }
 
-//    Todo: show credit or debit alongside.
+//    Todo: show credit or debit alongside.[Test]
     @Override
     public String transferMoney(TransactionDTO transfer) {
         Long fromAccount = transfer.getFrom();
@@ -179,7 +179,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String addFunds(CashTransactionDTO data) {
-        TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null);
+        TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null, null);
         if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
 
         Customer customer = this.customerRepository.findCustomerById(data.getCustomerId());
@@ -208,7 +208,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public String withdrawFunds(CashTransactionDTO data) {
-        TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null);
+        TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null, null);
         if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
 
         Customer customer = this.customerRepository.findCustomerById(data.getCustomerId());

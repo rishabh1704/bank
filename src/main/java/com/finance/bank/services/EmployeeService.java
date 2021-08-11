@@ -1,7 +1,7 @@
 package com.finance.bank.services;
 
 import com.finance.bank.dto.CustomerDTO;
-import org.springframework.http.ResponseEntity;
+import com.finance.bank.dto.TransientInfo;
 
 public interface EmployeeService {
 
@@ -13,5 +13,5 @@ public interface EmployeeService {
 
     public Long createNewAccount(long customerId);
 
-    public String deleteAccount(Long customerId, Long accountId);
+    public String deleteAccount(TransientInfo info);
 }

@@ -56,7 +56,7 @@ public class EmployeeController {
     @ApiOperation(value = "delete account for a customer along with all its transactions")
     @PostMapping("/delete_account")
     public ResponseEntity<Object> deleteAccount(@RequestBody TransientInfo data) {
-        String msg = this.employeeService.deleteAccount(data.getCustomerId(), data.getAccountId());
+        String msg = this.employeeService.deleteAccount(data);
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 

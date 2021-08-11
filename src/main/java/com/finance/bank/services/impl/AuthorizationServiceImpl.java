@@ -3,6 +3,7 @@ package com.finance.bank.services.impl;
 import com.finance.bank.dto.TransientInfo;
 import com.finance.bank.model.Account;
 import com.finance.bank.model.Customer;
+import com.finance.bank.model.Employee;
 import com.finance.bank.repositories.AccountRepository;
 import com.finance.bank.repositories.CustomerRepository;
 import com.finance.bank.repositories.EmployeeRepository;
@@ -47,6 +48,12 @@ public class AuthorizationServiceImpl implements AuthorizationService {
 
     @Override
     public Boolean verifyEmployeeOperation(TransientInfo info) {
-        return null;
+        Employee employee = this.employeeRepository.findEmployeeById(info.getEmployeeId());
+
+        if (employee == null) return false;
+
+        if (!employee.getPermissions().contains(info.getPermission())) return false;
+
+        return true;
     }
 }

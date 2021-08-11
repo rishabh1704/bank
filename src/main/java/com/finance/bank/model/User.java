@@ -6,7 +6,6 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
-// Todo : table name
 @Getter
 @Setter
 @NoArgsConstructor

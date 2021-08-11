@@ -23,7 +23,6 @@ public class CustomerDtoToCustomer implements Converter<CustomerDTO, Customer> {
         final Customer customer = new Customer();
 
         customer.setCustomerType(CustomerType.valueOf(customerDTO.getCustomerType()));
-//        assigned by the employee. todo: auto generate
         customer.setIdentificationNumber(customerDTO.getIdentificationNumber());
         customer.setFirstName(customerDTO.getFirstName());
         customer.setLastName(customerDTO.getLastName());

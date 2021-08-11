@@ -1,20 +1,24 @@
 package com.finance.bank.services.impl;
 
 import com.finance.bank.dto.CustomerDTO;
+import com.finance.bank.dto.TransientInfo;
 import com.finance.bank.mappers.CustomerDtoToCustomer;
 import com.finance.bank.model.*;
 import com.finance.bank.repositories.AccountRepository;
 import com.finance.bank.repositories.AddressRepository;
 import com.finance.bank.repositories.ContactRepository;
 import com.finance.bank.repositories.CustomerRepository;
+import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.EmployeeService;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Locale;
 import java.util.Set;
 
 @Service
@@ -27,12 +31,18 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final CustomerRepository customerRepository;
     private final AccountRepository accountRepository;
 
-    public EmployeeServiceImpl(CustomerDtoToCustomer customerDtoToCustomer, AddressRepository addressRepository, ContactRepository contactRepository, CustomerRepository customerRepository, AccountRepository accountRepository) {
+    private final AuthorizationService authorizationService;
+
+    public EmployeeServiceImpl(CustomerDtoToCustomer customerDtoToCustomer, AddressRepository addressRepository,
+                               ContactRepository contactRepository, CustomerRepository customerRepository,
+                               AccountRepository accountRepository, AuthorizationService authorizationService) {
         this.customerDtoToCustomer = customerDtoToCustomer;
         this.addressRepository = addressRepository;
         this.contactRepository = contactRepository;
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
+
+        this.authorizationService = authorizationService;
     }
 
     private Account accountCreationUtil(Customer customer) {
@@ -95,6 +105,10 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        using cascade all the child are saved when the parents are saved otherwise if they are not saved and used they will be in transient state. and one transient state can't access other transient state.
         log.debug("customerdto converted to customer");
 
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        String id = customer.getFirstName().toUpperCase() + timeStamp;
+        customer.setIdentificationNumber(id);
+
         Address address = customer.getAddress();
         Contact contact = customer.getContact();
 
@@ -142,18 +156,13 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    public String deleteAccount(Long customerId, Long accountId) {
-        Customer customer = this.customerRepository.findCustomerById(customerId);
+    public String deleteAccount(TransientInfo info) {
+        if (!this.authorizationService.verifyEmployeeOperation(info) ||
+                !this.authorizationService.verifyCustomerAccount(info))
+            return "Not Authorized.";
 
-        if (customer == null) {
-            return "No such customer";
-        }
-
-        Account account = this.accountRepository.findAccountById(accountId);
-
-        if (account == null) {
-            return "No such account";
-        }
+        Customer customer = this.customerRepository.findCustomerById(info.getCustomerId());
+        Account account = this.accountRepository.findAccountById(info.getAccountId());
 
         this.accountRepository.delete(account);
 

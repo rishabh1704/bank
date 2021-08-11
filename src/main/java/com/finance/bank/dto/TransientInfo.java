@@ -11,5 +11,8 @@ import lombok.NoArgsConstructor;
 public class TransientInfo {
     private Long customerId;
     private Long accountId;
+
+//    employee settings
     private Long employeeId;
+    private String permission;
 }

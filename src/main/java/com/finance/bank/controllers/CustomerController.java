@@ -14,9 +14,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-
-// Todo: add swagger
-
 @RestController
 @RequestMapping("customers")
 @Api(tags = {"Functions related to customer operations"})

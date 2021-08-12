@@ -74,7 +74,6 @@ public class CustomerServiceImpl implements CustomerService {
         return result;
     }
 
-//    Todo: show credit or debit alongside.[Test]
     @Override
     public String transferMoney(TransactionDTO transfer) {
         Long fromAccount = transfer.getFrom();

@@ -8,9 +8,11 @@ import com.finance.bank.repositories.AccountRepository;
 import com.finance.bank.repositories.CustomerRepository;
 import com.finance.bank.repositories.EmployeeRepository;
 import com.finance.bank.services.AuthorizationService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
 
 @Service
+@Log4j2
 public class AuthorizationServiceImpl implements AuthorizationService {
 
     private final AccountRepository accountRepository;

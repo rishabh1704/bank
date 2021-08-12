@@ -9,6 +9,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
+
 @RestController
 @RequestMapping("employees")
 @Api(tags = {"Functions related to employee operations"})
@@ -58,6 +61,17 @@ public class EmployeeController {
     public ResponseEntity<Object> deleteAccount(@RequestBody TransientInfo data) {
         String msg = this.employeeService.deleteAccount(data);
         return ResponseEntity.status(HttpStatus.OK).body(msg);
+    }
+
+    @ApiOperation(value = "Logging in the employee.")
+    @PostMapping("/login")
+    public ResponseEntity<Object> login(@RequestBody TransientInfo info,  HttpServletResponse response) {
+        Cookie cookie = this.employeeService.login(info);
+        if (cookie == null) {
+            ResponseEntity.status(HttpStatus.OK).body("Cookie not set");
+        }
+        response.addCookie(cookie);
+        return ResponseEntity.status(HttpStatus.OK).body("Logged in.");
     }
 
 }

@@ -36,7 +36,7 @@ public class CustomerController {
         return this.customerService.balanceEnquiry(accountId);
     }
 
-    @ApiOperation(value = "Check balance of an account")
+    @ApiOperation(value = "Transaction History for an account")
     @GetMapping("/history")
     public List<TransactionDTO> getTransactionHistory(@RequestBody Long accountId) {
         return this.customerService.transactionHistory(accountId);

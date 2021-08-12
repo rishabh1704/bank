@@ -6,6 +6,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+// todo -> Add DoB field to the model.
+
 @Getter
 @Setter
 @NoArgsConstructor

@@ -18,6 +18,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -223,5 +224,15 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.accountRepository.delete(account);
 
         return "Account wiped!";
+    }
+
+    @Override
+    public Cookie login(TransientInfo info) {
+        Boolean val = this.authorizationService.verifyEmployeeOperation(info);
+        if (!val)
+            return null;
+        Cookie cookie = new Cookie("employeeId", info.getEmployeeId().toString());
+        cookie.setMaxAge(1000);
+        return cookie;
     }
 }

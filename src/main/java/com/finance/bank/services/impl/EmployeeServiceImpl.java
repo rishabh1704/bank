@@ -79,6 +79,12 @@ public class EmployeeServiceImpl implements EmployeeService {
         return msg;
     }
 
+    private String generateIdentificationNumber(String fname) {
+        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
+        String id = fname.toUpperCase() + timeStamp;
+        return id;
+    }
+
     @Override
     @Transactional
     public String updateCustomer(long customerId, CustomerDTO data) {
@@ -137,17 +143,30 @@ public class EmployeeServiceImpl implements EmployeeService {
     public Long createCustomer(CustomerDTO data) {
 //        by default a single account of savings type is opened.
         Customer customer = this.customerDtoToCustomer.convert(data);
+        Address address = customer.getAddress();
+        Contact contact = customer.getContact();
+
+//        validation
+        Pair<Boolean, List<String>> val1 = this.addressValidator.validate(address);
+        Pair<Boolean, List<String>> val2 = this.customerValidator.validate(customer);
+        Pair<Boolean, List<String>> val3 = this.contactValidator.validate(contact);
+
+        if (!val1.getKey() || !val2.getKey() || !val3.getKey()) {
+            List<String> errors = new ArrayList<>();
+            errors.addAll(val1.getValue());
+            errors.addAll(val2.getValue());
+            errors.addAll(val3.getValue());
+            log.debug("Account creation errors!");
+            for (String err: errors) {
+                log.debug(err);
+            }
+            return -1L;
+        }
 
 //        id is assigned only after saving.
 //        using cascade all the child are saved when the parents are saved otherwise if they are not saved and used they will be in transient state. and one transient state can't access other transient state.
         log.debug("customerdto converted to customer");
-
-        String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new Date());
-        String id = customer.getFirstName().toUpperCase() + timeStamp;
-        customer.setIdentificationNumber(id);
-
-        Address address = customer.getAddress();
-        Contact contact = customer.getContact();
+        customer.setIdentificationNumber(generateIdentificationNumber(customer.getFirstName()));
 
 //        address created with link to customer
         this.addressRepository.save(address);

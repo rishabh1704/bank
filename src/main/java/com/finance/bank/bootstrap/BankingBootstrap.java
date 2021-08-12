@@ -3,6 +3,7 @@ package com.finance.bank.bootstrap;
 import com.finance.bank.model.*;
 import com.finance.bank.repositories.*;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
@@ -20,6 +21,9 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
     private TransactionRepository transactionRepository;
     private AddressRepository addressRepository;
     private ContactRepository contactRepository;
+
+    @Autowired
+    private TestRepository testRepository;
 
     public BankingBootstrap(AccountRepository accountRepository, CustomerRepository customerRepository,
                             EmployeeRepository employeeRepository, TransactionRepository transactionRepository,
@@ -44,6 +48,17 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             log.debug("Init for Employees now.");
             getEmployees();
         }
+
+//        test();
+    }
+
+    void test() {
+        TestEntity testEntity = new TestEntity();
+        testEntity.setF1("dsgsfdgs");
+        testEntity.setF2("sdfgafgadg");
+
+        this.testRepository.save(testEntity);
+
     }
 
     void getEmployees() {

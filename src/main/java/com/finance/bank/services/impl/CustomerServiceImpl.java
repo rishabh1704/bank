@@ -17,6 +17,7 @@ import com.finance.bank.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Slf4j
@@ -177,7 +178,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String addFunds(CashTransactionDTO data) {
+    @Transactional
+    public synchronized String addFunds(CashTransactionDTO data) {
         TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null, null);
         if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
 
@@ -206,7 +208,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public String withdrawFunds(CashTransactionDTO data) {
+    @Transactional
+    public synchronized String withdrawFunds(CashTransactionDTO data) {
         TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null, null);
         if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
 

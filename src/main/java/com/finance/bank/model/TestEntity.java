@@ -6,20 +6,17 @@ import lombok.Setter;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
-@Entity
-//@Table(uniqueConstraints = { @UniqueConstraint(columnNames = { "email" , "phone"}) })
-public class Contact extends BaseEntity{
+@Table(name = "test")
+public class TestEntity extends BaseEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @OneToOne(mappedBy = "contact")
-    private User user;
-
-    private String email;
-    private String phone;
+    private String f1;
+    private String f2;
 }

@@ -1,8 +1,14 @@
 package com.finance.bank.bootstrap;
 
+import com.finance.bank.dto.AddressDTO;
+import com.finance.bank.dto.ContactDTO;
+import com.finance.bank.dto.CustomerDTO;
+import com.finance.bank.dto.TransactionDTO;
 import com.finance.bank.model.*;
 import com.finance.bank.repositories.*;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -49,7 +55,97 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             getEmployees();
         }
 
-        test();
+        if (false) {
+            log.debug("Testing the Base entity.");
+            test();
+        }
+
+        if (true) {
+            log.debug("Testing the model mapper");
+            testModel();
+        }
+    }
+
+    void testModel() {
+        ModelMapper modelMapper = new ModelMapper();
+
+        Customer customer1 = new Customer();
+
+        Contact contact1 = new Contact();
+        contact1.setEmail("rahul@bank.com");
+        contact1.setPhone("3049858346");
+        contact1.setUser(customer1);
+
+        Address address1 = new Address();
+        address1.setCity("Sri Ganganagar");
+        address1.setLine1("sadhu wali cantt");
+        address1.setLine2("kothi ilaka");
+        address1.setState("Rajasthan");
+        address1.setPinCode("345678");
+        address1.setUser(new HashSet<>(Arrays.asList(customer1)));
+
+        customer1.setFirstName("Rishabh");
+        customer1.setLastName("Sharma");
+        customer1.setCustomerType(CustomerType.ACTIVE);
+        customer1.setIdentificationNumber("random_stuff");
+        customer1.setContact(contact1);
+        customer1.setAddress(address1);
+
+
+        CustomerDTO customerDTO = modelMapper.map(customer1, CustomerDTO.class);
+
+        CustomerDTO customerDTO1 = new CustomerDTO(CustomerType.ACTIVE.toString(), "raa", "sing",
+                "sdfadfasdfsdfa",
+                new AddressDTO("line1111", "line2222", "cityeee", "stateeeee", "123456"),
+                new ContactDTO("abcd@fmail.com", "23904820739")
+        );
+
+        Customer customer = modelMapper.map(customerDTO1, Customer.class);
+
+        //        individual account1
+        Account acc1 = new Account();
+        acc1.setOwner(customer1);
+        acc1.setAccountNumber("0938509");
+        acc1.setAccountType(AccountType.SAVINGS);
+        acc1.setBalance(510.22);
+        acc1.setId(13L);
+
+
+//        individual account2
+        Account acc2 = new Account();
+        acc2.setOwner(customer);
+        acc2.setAccountType(AccountType.SALARIED);
+        acc2.setBalance(5000.00);
+        acc2.setAccountNumber("9869786");
+        acc2.setId(15L);
+
+        Transaction transaction = new Transaction();
+        transaction.setIsNotified(false);
+        transaction.setAmount(9766.9);
+        transaction.setTransactionDate(new Date());
+        transaction.setAccount(acc1);
+        transaction.setToAccount(acc2);
+
+        ModelMapper mapper2 = new ModelMapper();
+
+        PropertyMap<Transaction, TransactionDTO> orderMap = new PropertyMap<Transaction, TransactionDTO>() {
+            @Override
+            protected void configure() {
+                map().setTo(source.getToAccount().getId());
+                map().setFrom(source.getAccount().getId());
+            }
+        };
+
+        mapper2.addMappings(orderMap);
+
+        TransactionDTO transactionDTO = mapper2.map(transaction, TransactionDTO.class);
+
+        log.warn("<<<<<<<<<<<<<  Transaction to TransactionDTO  >>>>>>>>>>>>>>>");
+        log.debug(transactionDTO.getAmount());
+        log.debug(transactionDTO.getTransactionDate());
+        log.debug(transactionDTO.getFrom());
+        log.debug(transactionDTO.getTo());
+
     }
 
     void test() {

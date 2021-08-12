@@ -12,5 +12,5 @@ public class TransactionDTO {
     private Long from;
     private Long to;
     private Double amount;
-    private Date txDate;
+    private Date transactionDate;
 }

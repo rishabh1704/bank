@@ -15,6 +15,7 @@ import com.finance.bank.repositories.TransactionRepository;
 import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -67,7 +68,7 @@ public class CustomerServiceImpl implements CustomerService {
             transactionDTO.setAmount(transaction.getAmount());
             transactionDTO.setFrom(transaction.getAccount().getId());
             transactionDTO.setTo(transaction.getToAccount().getId());
-            transactionDTO.setTxDate(transaction.getTransactionDate());
+            transactionDTO.setTransactionDate(transaction.getTransactionDate());
 
             result.add(transactionDTO);
         }
@@ -127,12 +128,14 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerDTO viewPersonalDetails(long customerId) {
         Customer customer = this.customerRepository.findCustomerById(customerId);
+        ModelMapper modelMapper = new ModelMapper();
         if (customer == null) {
             return new CustomerDTO();
         }
         CustomerDTO customerDTO = new CustomerDTO();
 
-        customerDTO = this.customerToCustomerDTO.convert(customer);
+//        customerDTO = this.customerToCustomerDTO.convert(customer);
+        customerDTO = modelMapper.map(customer, CustomerDTO.class);
         return customerDTO;
     }
 
@@ -168,7 +171,7 @@ public class CustomerServiceImpl implements CustomerService {
             Long from = transactionDTO.getFrom();
             Long to = transactionDTO.getTo();
             Double amount = transactionDTO.getAmount();
-            Date at = transactionDTO.getTxDate();
+            Date at = transactionDTO.getTransactionDate();
 
             String adder = "At " + at.toString() + " --- " + "From " + from.toString() + " To " + to.toString() + ", Transaction Amount: " + amount.toString() + "\n";
             result += adder;

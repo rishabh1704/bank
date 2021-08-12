@@ -1,14 +1,14 @@
 package com.finance.bank.dto;
 
 import com.finance.bank.model.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
+@AllArgsConstructor
 public class AddressDTO {
-
-    private UserListDTO user;
 
     private String line1;
     private String line2;

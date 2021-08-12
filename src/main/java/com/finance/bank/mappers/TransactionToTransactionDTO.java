@@ -11,7 +11,7 @@ public class TransactionToTransactionDTO implements Converter<Transaction, Trans
     public TransactionDTO convert(Transaction transaction) {
         final TransactionDTO transactionDTO = new TransactionDTO();
 
-        transactionDTO.setTxDate(transaction.getTransactionDate());
+        transactionDTO.setTransactionDate(transaction.getTransactionDate());
         transactionDTO.setFrom(transaction.getAccount().getId());
         transactionDTO.setTo(transaction.getToAccount().getId());
         transactionDTO.setAmount(transaction.getAmount());

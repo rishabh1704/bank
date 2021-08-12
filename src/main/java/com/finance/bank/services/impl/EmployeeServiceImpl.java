@@ -15,6 +15,7 @@ import com.finance.bank.validators.ContactValidator;
 import com.finance.bank.validators.CustomerValidator;
 import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
@@ -95,7 +96,10 @@ public class EmployeeServiceImpl implements EmployeeService {
             return "No such customer exists in our database";
         }
 
-        Customer newCustomer = this.customerDtoToCustomer.convert(data);
+        ModelMapper mapper = new ModelMapper();
+
+//        Customer newCustomer = this.customerDtoToCustomer.convert(data);
+        Customer newCustomer = mapper.map(data, Customer.class);
 
 //        Identification number can never be changed even in the update
 //        Manually set all fields and then update in db as if the whole new object is saved then the mappings are forgotten
@@ -143,7 +147,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     @Transactional
     public Long createCustomer(CustomerDTO data) {
 //        by default a single account of savings type is opened.
-        Customer customer = this.customerDtoToCustomer.convert(data);
+        ModelMapper mapper = new ModelMapper();
+//        Customer customer = this.customerDtoToCustomer.convert(data);
+        Customer customer = mapper.map(data, Customer.class);
         Address address = customer.getAddress();
         Contact contact = customer.getContact();
 

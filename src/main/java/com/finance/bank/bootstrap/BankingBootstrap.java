@@ -60,7 +60,7 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             test();
         }
 
-        if (true) {
+        if (false) {
             log.debug("Testing the model mapper");
             testModel();
         }

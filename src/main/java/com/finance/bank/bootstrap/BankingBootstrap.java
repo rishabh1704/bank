@@ -49,13 +49,13 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             getEmployees();
         }
 
-//        test();
+        test();
     }
 
     void test() {
         TestEntity testEntity = new TestEntity();
-        testEntity.setF1("dsgsfdgs");
-        testEntity.setF2("sdfgafgadg");
+        testEntity.setF1("kjhk");
+        testEntity.setF2("sdfad");
 
         this.testRepository.save(testEntity);
 

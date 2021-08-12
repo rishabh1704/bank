@@ -10,16 +10,17 @@ import com.finance.bank.repositories.ContactRepository;
 import com.finance.bank.repositories.CustomerRepository;
 import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.EmployeeService;
+import com.finance.bank.validators.AddressValidator;
+import com.finance.bank.validators.ContactValidator;
+import com.finance.bank.validators.CustomerValidator;
+import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.Locale;
-import java.util.Set;
+import java.util.*;
 
 @Service
 @Log4j2
@@ -33,9 +34,14 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final AuthorizationService authorizationService;
 
+    private final ContactValidator contactValidator;
+    private final CustomerValidator customerValidator;
+    private final AddressValidator addressValidator;
+
     public EmployeeServiceImpl(CustomerDtoToCustomer customerDtoToCustomer, AddressRepository addressRepository,
                                ContactRepository contactRepository, CustomerRepository customerRepository,
-                               AccountRepository accountRepository, AuthorizationService authorizationService) {
+                               AccountRepository accountRepository, AuthorizationService authorizationService,
+                               ContactValidator contactValidator, AddressValidator addressValidator, CustomerValidator customerValidator) {
         this.customerDtoToCustomer = customerDtoToCustomer;
         this.addressRepository = addressRepository;
         this.contactRepository = contactRepository;
@@ -43,6 +49,10 @@ public class EmployeeServiceImpl implements EmployeeService {
         this.accountRepository = accountRepository;
 
         this.authorizationService = authorizationService;
+
+        this.contactValidator = contactValidator;
+        this.customerValidator = customerValidator;
+        this.addressValidator = addressValidator;
     }
 
     private Account accountCreationUtil(Customer customer) {
@@ -59,6 +69,16 @@ public class EmployeeServiceImpl implements EmployeeService {
         return account;
     }
 
+    private String consolidateErrors(List<String> errors) {
+        String msg = "";
+        for (String m : errors) {
+            msg += m;
+            msg += "\n";
+        }
+
+        return msg;
+    }
+
     @Override
     @Transactional
     public String updateCustomer(long customerId, CustomerDTO data) {
@@ -68,11 +88,28 @@ public class EmployeeServiceImpl implements EmployeeService {
             return "No such customer exists in our database";
         }
 
+        Customer newCustomer = this.customerDtoToCustomer.convert(data);
+
 //        Identification number can never be changed even in the update
 //        Manually set all fields and then update in db as if the whole new object is saved then the mappings are forgotten
 //        and new mappings must be found
 
-//        Todo: validation is required, and send which fields can not be changed to the employee
+        Pair<Boolean, List<String>> val1 = this.addressValidator.validate(newCustomer.getAddress());
+        Pair<Boolean, List<String>> val2 = this.customerValidator.validate(newCustomer);
+        Pair<Boolean, List<String>> val3 = this.contactValidator.validate(newCustomer.getContact());
+
+        log.debug(val1.getKey());
+        log.debug(val2.getKey());
+        log.debug(val3.getKey());
+
+        if (!val1.getKey() || !val2.getKey() || !val3.getKey()) {
+            List<String> errors = new ArrayList<>();
+            errors.addAll(val1.getValue());
+            errors.addAll(val2.getValue());
+            errors.addAll(val3.getValue());
+            return consolidateErrors(errors);
+        }
+
         customer.setCustomerType(CustomerType.valueOf(data.getCustomerType()));
         customer.setFirstName(data.getFirstName());
         customer.setLastName(data.getLastName());

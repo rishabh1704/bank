@@ -3,6 +3,7 @@ package com.finance.bank.validators.impl;
 import com.finance.bank.model.Contact;
 import com.finance.bank.validators.ContactValidator;
 import javafx.util.Pair;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Log4j2
 @Component
 public class ContactValidatorImpl implements ContactValidator {
     @Override
@@ -27,6 +29,9 @@ public class ContactValidatorImpl implements ContactValidator {
             errors.add("Not a valid email format!");
             result = false;
         }
+
+        log.debug("phone number is");
+        log.debug(contact.getPhone());
 
         if (!phoneMatcher.find()){
             errors.add("Not a valid phone number!");

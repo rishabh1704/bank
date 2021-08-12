@@ -16,6 +16,7 @@ import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.CustomerService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -144,11 +145,25 @@ public class CustomerServiceImpl implements CustomerService {
         List<Transaction> transactions = this.transactionRepository.findAllByAccount_Id(id);
         List<TransactionDTO> result = new ArrayList<>();
 
+//        Configuration for mapping account to ids
+        PropertyMap<Transaction, TransactionDTO> orderMap = new PropertyMap<Transaction, TransactionDTO>() {
+            @Override
+            protected void configure() {
+                map().setTo(source.getToAccount().getId());
+                map().setFrom(source.getAccount().getId());
+            }
+        };
+
+        ModelMapper mapper = new ModelMapper();
+        mapper.addMappings(orderMap);
+
+
         for (Transaction transaction: transactions) {
             if (!transaction.getIsNotified()) {
                 transaction.setIsNotified(true);
                 this.transactionRepository.save(transaction);
-                result.add(this.transactionToTransactionDTO.convert(transaction));
+                result.add(mapper.map(transaction, TransactionDTO.class));
+//                result.add(this.transactionToTransactionDTO.convert(transaction));
             }
         }
 

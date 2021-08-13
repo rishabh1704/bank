@@ -1,7 +1,7 @@
-package com.finance.bank.validators.impl;
+package com.finance.bank.constraints.impl;
 
 import com.finance.bank.model.Contact;
-import com.finance.bank.validators.ContactValidator;
+import com.finance.bank.constraints.ContactValidator;
 import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;

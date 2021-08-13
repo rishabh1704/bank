@@ -1,5 +1,6 @@
 package com.finance.bank.services.impl;
 
+import com.finance.bank.constraints.*;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransientInfo;
 import com.finance.bank.mappers.CustomerDtoToCustomer;
@@ -10,14 +11,11 @@ import com.finance.bank.repositories.ContactRepository;
 import com.finance.bank.repositories.CustomerRepository;
 import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.EmployeeService;
-import com.finance.bank.validators.AddressValidator;
-import com.finance.bank.validators.ContactValidator;
-import com.finance.bank.validators.CustomerValidator;
 import javafx.util.Pair;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 
 import javax.servlet.http.Cookie;
 import javax.transaction.Transactional;
@@ -39,6 +37,9 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final ContactValidator contactValidator;
     private final CustomerValidator customerValidator;
     private final AddressValidator addressValidator;
+
+    @EmailConstraint
+    private String emailVal;
 
     public EmployeeServiceImpl(CustomerDtoToCustomer customerDtoToCustomer, AddressRepository addressRepository,
                                ContactRepository contactRepository, CustomerRepository customerRepository,
@@ -88,7 +89,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     @Override
-    @Transactional
     public String updateCustomer(long customerId, CustomerDTO data) {
         Customer customer = this.customerRepository.findCustomerById(customerId);
         if (customer == null) {
@@ -105,6 +105,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        Manually set all fields and then update in db as if the whole new object is saved then the mappings are forgotten
 //        and new mappings must be found
 
+        emailVal = "rishabh@rr";
         Pair<Boolean, List<String>> val1 = this.addressValidator.validate(newCustomer.getAddress());
         Pair<Boolean, List<String>> val2 = this.customerValidator.validate(newCustomer);
         Pair<Boolean, List<String>> val3 = this.contactValidator.validate(newCustomer.getContact());

@@ -1,8 +1,7 @@
-package com.finance.bank.validators.impl;
+package com.finance.bank.constraints.impl;
 
-import com.finance.bank.model.Account;
 import com.finance.bank.model.Address;
-import com.finance.bank.validators.AddressValidator;
+import com.finance.bank.constraints.AddressValidator;
 import javafx.util.Pair;
 import org.springframework.stereotype.Component;
 

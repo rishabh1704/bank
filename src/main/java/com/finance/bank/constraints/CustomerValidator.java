@@ -1,6 +1,5 @@
-package com.finance.bank.validators;
+package com.finance.bank.constraints;
 
-import com.finance.bank.model.Account;
 import com.finance.bank.model.Customer;
 import javafx.util.Pair;
 

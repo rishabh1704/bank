@@ -1,11 +1,16 @@
 package com.finance.bank.bootstrap;
 
+import com.finance.bank.constraints.EmailConstraint;
+import com.finance.bank.constraints.validators.EmailValidator;
 import com.finance.bank.dto.AddressDTO;
 import com.finance.bank.dto.ContactDTO;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransactionDTO;
 import com.finance.bank.model.*;
 import com.finance.bank.repositories.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -13,6 +18,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
+import org.springframework.validation.annotation.Validated;
 
 import javax.transaction.Transactional;
 import java.util.*;
@@ -64,6 +70,16 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             log.debug("Testing the model mapper");
             testModel();
         }
+
+        if (true) {
+            log.debug("Test the annotations of validations");
+            testAnn("Some text");
+        }
+    }
+
+    void testAnn(String emailVal) {
+//        emailVal = "nilest@guard";
+
     }
 
     void testModel() {

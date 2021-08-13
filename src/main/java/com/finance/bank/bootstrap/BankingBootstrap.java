@@ -37,6 +37,9 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
     @Autowired
     private TestRepository testRepository;
 
+    @EmailConstraint
+    private String emailVal;
+
     public BankingBootstrap(AccountRepository accountRepository, CustomerRepository customerRepository,
                             EmployeeRepository employeeRepository, TransactionRepository transactionRepository,
                             AddressRepository addressRepository, ContactRepository contactRepository) {
@@ -71,16 +74,20 @@ public class BankingBootstrap implements ApplicationListener<ContextRefreshedEve
             testModel();
         }
 
-        if (true) {
+        if (false) {
             log.debug("Test the annotations of validations");
             testAnn("Some text");
         }
     }
 
     void testAnn(String emailVal) {
-//        emailVal = "nilest@guard";
+        emailVal = "nilest@guard";
 
     }
+
+//    public static void main(String[] args) {
+//        testAnn("sth");
+//    }
 
     void testModel() {
         ModelMapper modelMapper = new ModelMapper();

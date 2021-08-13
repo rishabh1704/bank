@@ -38,9 +38,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final CustomerValidator customerValidator;
     private final AddressValidator addressValidator;
 
-    @EmailConstraint
-    private String emailVal;
-
     public EmployeeServiceImpl(CustomerDtoToCustomer customerDtoToCustomer, AddressRepository addressRepository,
                                ContactRepository contactRepository, CustomerRepository customerRepository,
                                AccountRepository accountRepository, AuthorizationService authorizationService,
@@ -105,22 +102,23 @@ public class EmployeeServiceImpl implements EmployeeService {
 //        Manually set all fields and then update in db as if the whole new object is saved then the mappings are forgotten
 //        and new mappings must be found
 
-        emailVal = "rishabh@rr";
-        Pair<Boolean, List<String>> val1 = this.addressValidator.validate(newCustomer.getAddress());
-        Pair<Boolean, List<String>> val2 = this.customerValidator.validate(newCustomer);
-        Pair<Boolean, List<String>> val3 = this.contactValidator.validate(newCustomer.getContact());
-
-        log.debug(val1.getKey());
-        log.debug(val2.getKey());
-        log.debug(val3.getKey());
-
-        if (!val1.getKey() || !val2.getKey() || !val3.getKey()) {
-            List<String> errors = new ArrayList<>();
-            errors.addAll(val1.getValue());
-            errors.addAll(val2.getValue());
-            errors.addAll(val3.getValue());
-            return consolidateErrors(errors);
-        }
+//        if (false) {
+//            Pair<Boolean, List<String>> val1 = this.addressValidator.validate(newCustomer.getAddress());
+//            Pair<Boolean, List<String>> val2 = this.customerValidator.validate(newCustomer);
+//            Pair<Boolean, List<String>> val3 = this.contactValidator.validate(newCustomer.getContact());
+//
+//            log.debug(val1.getKey());
+//            log.debug(val2.getKey());
+//            log.debug(val3.getKey());
+//
+//            if (!val1.getKey() || !val2.getKey() || !val3.getKey()) {
+//                List<String> errors = new ArrayList<>();
+//                errors.addAll(val1.getValue());
+//                errors.addAll(val2.getValue());
+//                errors.addAll(val3.getValue());
+//                return consolidateErrors(errors);
+//            }
+//        }
 
         customer.setCustomerType(CustomerType.valueOf(data.getCustomerType()));
         customer.setFirstName(data.getFirstName());
@@ -155,21 +153,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         Contact contact = customer.getContact();
 
 //        validation
-        Pair<Boolean, List<String>> val1 = this.addressValidator.validate(address);
-        Pair<Boolean, List<String>> val2 = this.customerValidator.validate(customer);
-        Pair<Boolean, List<String>> val3 = this.contactValidator.validate(contact);
-
-        if (!val1.getKey() || !val2.getKey() || !val3.getKey()) {
-            List<String> errors = new ArrayList<>();
-            errors.addAll(val1.getValue());
-            errors.addAll(val2.getValue());
-            errors.addAll(val3.getValue());
-            log.debug("Account creation errors!");
-            for (String err: errors) {
-                log.debug(err);
-            }
-            return -1L;
-        }
+//        Pair<Boolean, List<String>> val1 = this.addressValidator.validate(address);
+//        Pair<Boolean, List<String>> val2 = this.customerValidator.validate(customer);
+//        Pair<Boolean, List<String>> val3 = this.contactValidator.validate(contact);
+//
+//        if (!val1.getKey() || !val2.getKey() || !val3.getKey()) {
+//            List<String> errors = new ArrayList<>();
+//            errors.addAll(val1.getValue());
+//            errors.addAll(val2.getValue());
+//            errors.addAll(val3.getValue());
+//            log.debug("Account creation errors!");
+//            for (String err: errors) {
+//                log.debug(err);
+//            }
+//            return -1L;
+//        }
 
 //        id is assigned only after saving.
 //        using cascade all the child are saved when the parents are saved otherwise if they are not saved and used they will be in transient state. and one transient state can't access other transient state.

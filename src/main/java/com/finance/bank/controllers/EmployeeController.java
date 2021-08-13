@@ -7,14 +7,17 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("employees")
 @Api(tags = {"Functions related to employee operations"})
+@Validated
 public class EmployeeController {
 
     private EmployeeService employeeService;
@@ -37,7 +40,7 @@ public class EmployeeController {
 
     @ApiOperation(value = "update the customer information")
     @PostMapping("/update_customer/{id}")
-    public ResponseEntity<Object> updateCustomer(@PathVariable(name = "id") Long id, @RequestBody CustomerDTO data) {
+    public ResponseEntity<Object> updateCustomer(@PathVariable(name = "id") Long id, @Valid @RequestBody CustomerDTO data) {
         String msg = this.employeeService.updateCustomer(id, data);
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }

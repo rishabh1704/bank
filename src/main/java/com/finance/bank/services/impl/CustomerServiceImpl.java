@@ -78,10 +78,13 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
+    @Transactional
     public String transferMoney(TransactionDTO transfer) {
         Long fromAccount = transfer.getFrom();
         Long toAccount = transfer.getTo();
         Double amount = transfer.getAmount();
+
+        // todo shorten
 
         Account fromAccountObj = this.accountRepository.findAccountById(fromAccount);
         Account toAccountObj = this.accountRepository.findAccountById(toAccount);

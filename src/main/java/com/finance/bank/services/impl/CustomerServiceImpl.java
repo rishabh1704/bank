@@ -4,6 +4,7 @@ import com.finance.bank.dto.CashTransactionDTO;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransactionDTO;
 import com.finance.bank.dto.TransientInfo;
+import com.finance.bank.exceptions.InvalidCredentialsException;
 import com.finance.bank.mappers.CustomerToCustomerDTO;
 import com.finance.bank.mappers.TransactionToTransactionDTO;
 import com.finance.bank.model.Account;
@@ -14,6 +15,7 @@ import com.finance.bank.repositories.CustomerRepository;
 import com.finance.bank.repositories.TransactionRepository;
 import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.CustomerService;
+import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
@@ -22,7 +24,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.*;
 
-@Slf4j
+@Log4j2
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -195,7 +197,8 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public synchronized String addFunds(CashTransactionDTO data) {
         TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null, null);
-        if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
+//        if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
+        if (!this.authorizationService.verifyCustomerAccount(info)) throw new InvalidCredentialsException("Credentials not enough. Addition not possible.");
 
         Customer customer = this.customerRepository.findCustomerById(data.getCustomerId());
         Account account = this.accountRepository.findAccountById(data.getAccountId());
@@ -217,7 +220,10 @@ public class CustomerServiceImpl implements CustomerService {
     @Transactional
     public synchronized String withdrawFunds(CashTransactionDTO data) {
         TransientInfo info = new TransientInfo(data.getCustomerId(), data.getAccountId(), null, null);
-        if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
+//        if (!this.authorizationService.verifyCustomerAccount(info)) return "Not Authorized";
+
+        if (!this.authorizationService.verifyCustomerAccount(info)) throw new InvalidCredentialsException("Creds not enough. Withdrawal not possible.");
+
 
         Customer customer = this.customerRepository.findCustomerById(data.getCustomerId());
         Account account = this.accountRepository.findAccountById(data.getAccountId());

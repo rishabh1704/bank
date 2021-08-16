@@ -77,6 +77,20 @@ public class CustomerServiceImpl implements CustomerService {
         return result;
     }
 
+    private void createAndSaveTransaction(Account from, Account to, Double amount, Date curr) {
+
+        Transaction transaction = new Transaction();
+
+        transaction.setAccount(from);
+        transaction.setToAccount(to);
+        transaction.setAmount(amount);
+        transaction.setIsNotified(false);
+        transaction.setTransactionDate(curr);
+
+        this.transactionRepository.save(transaction);
+
+    }
+
     @Override
     @Transactional
     public String transferMoney(TransactionDTO transfer) {
@@ -84,35 +98,17 @@ public class CustomerServiceImpl implements CustomerService {
         Long toAccount = transfer.getTo();
         Double amount = transfer.getAmount();
 
-        // todo shorten
+        synchronized (this) {
+            Account fromAccountObj = this.accountRepository.findAccountById(fromAccount);
+            Account toAccountObj = this.accountRepository.findAccountById(toAccount);
 
-        Account fromAccountObj = this.accountRepository.findAccountById(fromAccount);
-        Account toAccountObj = this.accountRepository.findAccountById(toAccount);
-
-        if (Double.compare(fromAccountObj.getBalance(), amount) > 0) {
+            if (Double.compare(fromAccountObj.getBalance(), amount) > 0) {
 //            transaction can be made
-            synchronized (this) {
-
-                Transaction from = new Transaction();
-                Transaction to = new Transaction();
 
                 Date curr = new Date();
 
-//                mapping
-                from.setAccount(fromAccountObj);
-                from.setToAccount(toAccountObj);
-                from.setAmount(-1*amount);
-                from.setIsNotified(false);
-                from.setTransactionDate(curr);
-                this.transactionRepository.save(from);
-
-//                mapping
-                to.setAccount(toAccountObj);
-                to.setToAccount(fromAccountObj);
-                to.setAmount(amount);
-                to.setIsNotified(false);
-                to.setTransactionDate(curr);
-                this.transactionRepository.save(to);
+                createAndSaveTransaction(fromAccountObj, toAccountObj, -1.0 * amount, curr);
+                createAndSaveTransaction(toAccountObj, fromAccountObj, amount, curr);
 
                 fromAccountObj.setBalance(fromAccountObj.getBalance() - amount);
                 this.accountRepository.save(fromAccountObj);
@@ -120,12 +116,9 @@ public class CustomerServiceImpl implements CustomerService {
                 toAccountObj.setBalance(amount + toAccountObj.getBalance());
                 this.accountRepository.save(toAccountObj);
 
-            }
-
-
-            return "Transaction successful";
-        } else {
-            return "Insufficient Funds";
+                return "Transaction successful";
+            } else
+                return "Insufficient Funds";
         }
     }
 
@@ -209,17 +202,9 @@ public class CustomerServiceImpl implements CustomerService {
 
         Double amount = data.getAmount();
 
-//        create a transaction
-        Transaction transaction = new Transaction();
-
 //        cash addition to self from and to account number remains the same.
 
-        transaction.setTransactionDate(new Date());
-        transaction.setAmount(amount);
-        transaction.setIsNotified(false);
-        transaction.setAccount(account);
-        transaction.setToAccount(account);
-        this.transactionRepository.save(transaction);
+        createAndSaveTransaction(account, account, amount, new Date());
 
 //        update balance
         account.setBalance(account.getBalance() + amount);
@@ -243,14 +228,7 @@ public class CustomerServiceImpl implements CustomerService {
             return "Insufficient funds.";
         }
 
-//        make transaction
-        Transaction transaction = new Transaction();
-        transaction.setTransactionDate(new Date());
-        transaction.setAmount(-1*amount);
-        transaction.setIsNotified(false);
-        transaction.setAccount(account);
-        transaction.setToAccount(account);
-        this.transactionRepository.save(transaction);
+        createAndSaveTransaction(account, account, -1*amount, new Date());
 
         account.setBalance(account.getBalance() - amount);
         this.accountRepository.save(account);

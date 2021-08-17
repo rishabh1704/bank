@@ -3,7 +3,6 @@ package com.finance.bank.services.impl;
 import com.finance.bank.constraints.*;
 import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransientInfo;
-import com.finance.bank.mappers.CustomerDtoToCustomer;
 import com.finance.bank.model.*;
 import com.finance.bank.repositories.AccountRepository;
 import com.finance.bank.repositories.AddressRepository;
@@ -26,7 +25,6 @@ import java.util.*;
 @Log4j2
 public class EmployeeServiceImpl implements EmployeeService {
 
-    private final CustomerDtoToCustomer customerDtoToCustomer;
     private final AddressRepository addressRepository;
     private final ContactRepository contactRepository;
     private final CustomerRepository customerRepository;
@@ -38,11 +36,10 @@ public class EmployeeServiceImpl implements EmployeeService {
     private final CustomerValidator customerValidator;
     private final AddressValidator addressValidator;
 
-    public EmployeeServiceImpl(CustomerDtoToCustomer customerDtoToCustomer, AddressRepository addressRepository,
+    public EmployeeServiceImpl(AddressRepository addressRepository,
                                ContactRepository contactRepository, CustomerRepository customerRepository,
                                AccountRepository accountRepository, AuthorizationService authorizationService,
                                ContactValidator contactValidator, AddressValidator addressValidator, CustomerValidator customerValidator) {
-        this.customerDtoToCustomer = customerDtoToCustomer;
         this.addressRepository = addressRepository;
         this.contactRepository = contactRepository;
         this.customerRepository = customerRepository;

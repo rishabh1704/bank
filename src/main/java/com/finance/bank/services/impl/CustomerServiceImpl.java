@@ -5,8 +5,6 @@ import com.finance.bank.dto.CustomerDTO;
 import com.finance.bank.dto.TransactionDTO;
 import com.finance.bank.dto.TransientInfo;
 import com.finance.bank.exceptions.InvalidCredentialsException;
-import com.finance.bank.mappers.CustomerToCustomerDTO;
-import com.finance.bank.mappers.TransactionToTransactionDTO;
 import com.finance.bank.model.Account;
 import com.finance.bank.model.Customer;
 import com.finance.bank.model.Transaction;
@@ -16,7 +14,6 @@ import com.finance.bank.repositories.TransactionRepository;
 import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.CustomerService;
 import lombok.extern.log4j.Log4j2;
-import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
 import org.springframework.stereotype.Service;
@@ -33,19 +30,12 @@ public class CustomerServiceImpl implements CustomerService {
     private final TransactionRepository transactionRepository;
     private final AuthorizationService authorizationService;
 
-    private final CustomerToCustomerDTO customerToCustomerDTO;
-    private final TransactionToTransactionDTO transactionToTransactionDTO;
-
     public CustomerServiceImpl(CustomerRepository customerRepository, AccountRepository accountRepository,
-                               TransactionRepository transactionRepository, CustomerToCustomerDTO customerToCustomerDTO,
-                               TransactionToTransactionDTO transactionToTransactionDTO, AuthorizationService authorizationService) {
+                               TransactionRepository transactionRepository, AuthorizationService authorizationService) {
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
         this.transactionRepository = transactionRepository;
         this.authorizationService = authorizationService;
-
-        this.customerToCustomerDTO = customerToCustomerDTO;
-        this.transactionToTransactionDTO = transactionToTransactionDTO;
     }
 
     @Override

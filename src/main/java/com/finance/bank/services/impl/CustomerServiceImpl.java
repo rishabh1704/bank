@@ -1,10 +1,8 @@
 package com.finance.bank.services.impl;
 
-import com.finance.bank.dto.CashTransactionDTO;
-import com.finance.bank.dto.CustomerDTO;
-import com.finance.bank.dto.TransactionDTO;
-import com.finance.bank.dto.TransientInfo;
+import com.finance.bank.dto.*;
 import com.finance.bank.exceptions.InvalidCredentialsException;
+import com.finance.bank.logging.LoggingContext;
 import com.finance.bank.model.Account;
 import com.finance.bank.model.Customer;
 import com.finance.bank.model.Transaction;
@@ -13,15 +11,19 @@ import com.finance.bank.repositories.CustomerRepository;
 import com.finance.bank.repositories.TransactionRepository;
 import com.finance.bank.services.AuthorizationService;
 import com.finance.bank.services.CustomerService;
+import lombok.extern.java.Log;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.PropertyMap;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
 
-@Log4j2
+@Slf4j
 @Service
 public class CustomerServiceImpl implements CustomerService {
 
@@ -29,6 +31,8 @@ public class CustomerServiceImpl implements CustomerService {
     private final AccountRepository accountRepository;
     private final TransactionRepository transactionRepository;
     private final AuthorizationService authorizationService;
+
+    private final Logger LOGGER = LoggerFactory.getLogger("LOGGING");
 
     public CustomerServiceImpl(CustomerRepository customerRepository, AccountRepository accountRepository,
                                TransactionRepository transactionRepository, AuthorizationService authorizationService) {
@@ -79,7 +83,16 @@ public class CustomerServiceImpl implements CustomerService {
         transaction.setIsNotified(false);
         transaction.setTransactionDate(curr);
 
+        LoggingDTO loggingDTO = new LoggingDTO();
+        LoggingContext.setLoggingInfo(loggingDTO);
+        LoggingContext.append("fromAccountId", from.getId());
+        LoggingContext.append("toAccountId", to.getId());
+        LoggingContext.append("amount", amount.toString());
+
+        LOGGER.info(LoggingContext.getLoggingInfo().toString());
+
         this.transactionRepository.save(transaction);
+
 
     }
 

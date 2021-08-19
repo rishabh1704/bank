@@ -24,6 +24,9 @@ public class EmployeeAuthorizationInterceptor implements HandlerInterceptor {
         LoggingContext.setLoggingInfo(loggingDTO);
 //        logger is now dto initialized.
 
+        Long startTime = System.currentTimeMillis();
+        request.setAttribute("startTime", startTime);
+
         LoggingContext.append("request", request.getRequestURI());
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }
@@ -31,6 +34,11 @@ public class EmployeeAuthorizationInterceptor implements HandlerInterceptor {
     @Override
     public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler, ModelAndView modelAndView) throws Exception {
         LoggingContext.append("statusCode", Integer.toString(response.getStatus()));
+        Long startTime = (Long) request.getAttribute("startTime");
+        Long endTime = System.currentTimeMillis();
+        Long executionTime = endTime - startTime;
+
+        LoggingContext.append("responseTime", executionTime.toString());
         LOGGER.info(LoggingContext.getLoggingInfo().toString());
 
         HandlerInterceptor.super.postHandle(request, response, handler, modelAndView);

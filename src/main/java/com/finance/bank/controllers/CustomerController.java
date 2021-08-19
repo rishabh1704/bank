@@ -29,9 +29,9 @@ public class CustomerController {
     @PostConstruct
     public void init() {
         System.out.println("before any mapping is called");
-        LoggingContext loggingContext = new LoggingContext();
-        LoggingDTO loggingDTO = new LoggingDTO();
-        LoggingContext.setLoggingInfo(loggingDTO);
+//        LoggingContext loggingContext = new LoggingContext();
+//        LoggingDTO loggingDTO = new LoggingDTO();
+//        LoggingContext.setLoggingInfo(loggingDTO);
     }
 
     public CustomerController(CustomerService customerService) {
@@ -84,8 +84,13 @@ public class CustomerController {
     @ApiOperation(value = "Withdraw cash/funds from the account")
     @PostMapping("/withdraw_money")
     public ResponseEntity<Object> withdrawMoney(@RequestBody CashTransactionDTO data, HttpServletRequest request) {
+//        LoggingContext loggingContext = new LoggingContext();
+//        LoggingDTO loggingDTO = new LoggingDTO();
+//        LoggingContext.setLoggingInfo(loggingDTO);
+//        LoggingContext.append("request", request.getRequestURI());
+
         String msg = this.customerService.withdrawFunds(data);
-        LoggingContext.append("request", request.getRequestURI());
+
         return ResponseEntity.status(HttpStatus.OK).body(msg);
     }
 

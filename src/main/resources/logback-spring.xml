@@ -13,10 +13,10 @@
         <encoder>
             <pattern>%m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}</pattern>
         </encoder>
-        <file>/Users/rishabhsharma/Documents/banklog-${hostname}-txn.log</file>
+        <file>/Users/rishabhsharma/Documents/logs/banklog-txn.log</file>
         <rollingPolicy
                 class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
-            <fileNamePattern>/Users/rishabhsharma/Documents/banklog-${hostname}-%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>
+            <fileNamePattern>/Users/rishabhsharma/Documents/logs/banklog-%d{yyyy-MM-dd-HH}.%i.log</fileNamePattern>
             <maxFileSize>10MB</maxFileSize>
         </rollingPolicy>
     </appender>

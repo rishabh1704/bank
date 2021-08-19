@@ -32,7 +32,6 @@ public class CustomerServiceImpl implements CustomerService {
     private final TransactionRepository transactionRepository;
     private final AuthorizationService authorizationService;
 
-    private final Logger LOGGER = LoggerFactory.getLogger("LOGGING");
 
     public CustomerServiceImpl(CustomerRepository customerRepository, AccountRepository accountRepository,
                                TransactionRepository transactionRepository, AuthorizationService authorizationService) {
@@ -83,17 +82,15 @@ public class CustomerServiceImpl implements CustomerService {
         transaction.setIsNotified(false);
         transaction.setTransactionDate(curr);
 
-        LoggingDTO loggingDTO = new LoggingDTO();
-        LoggingContext.setLoggingInfo(loggingDTO);
+//        LoggingDTO loggingDTO = new LoggingDTO();
+//        LoggingContext.setLoggingInfo(loggingDTO);
         LoggingContext.append("fromAccountId", from.getId());
         LoggingContext.append("toAccountId", to.getId());
         LoggingContext.append("amount", amount.toString());
 
-        LOGGER.info(LoggingContext.getLoggingInfo().toString());
+//        LOGGER.info(LoggingContext.getLoggingInfo().toString());
 
         this.transactionRepository.save(transaction);
-
-
     }
 
     @Override

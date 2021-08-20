@@ -32,24 +32,15 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     private final AuthorizationService authorizationService;
 
-    private final ContactValidator contactValidator;
-    private final CustomerValidator customerValidator;
-    private final AddressValidator addressValidator;
-
     public EmployeeServiceImpl(AddressRepository addressRepository,
                                ContactRepository contactRepository, CustomerRepository customerRepository,
-                               AccountRepository accountRepository, AuthorizationService authorizationService,
-                               ContactValidator contactValidator, AddressValidator addressValidator, CustomerValidator customerValidator) {
+                               AccountRepository accountRepository, AuthorizationService authorizationService) {
         this.addressRepository = addressRepository;
         this.contactRepository = contactRepository;
         this.customerRepository = customerRepository;
         this.accountRepository = accountRepository;
 
         this.authorizationService = authorizationService;
-
-        this.contactValidator = contactValidator;
-        this.customerValidator = customerValidator;
-        this.addressValidator = addressValidator;
     }
 
     private Account accountCreationUtil(Customer customer) {

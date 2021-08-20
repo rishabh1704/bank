@@ -70,17 +70,17 @@
 		</dependency>
 
 <!--		Keycloak-->
-<!--		<dependency>-->
-<!--			<groupId>org.keycloak</groupId>-->
-<!--			<artifactId>keycloak-spring-boot-starter</artifactId>-->
-<!--			<version>15.0.1</version>-->
-<!--		</dependency>-->
+		<dependency>
+			<groupId>org.keycloak</groupId>
+			<artifactId>keycloak-spring-boot-starter</artifactId>
+			<version>15.0.1</version>
+		</dependency>
 
-<!--&lt;!&ndash;		security&ndash;&gt;-->
-<!--		<dependency>-->
-<!--			<groupId>org.springframework.boot</groupId>-->
-<!--			<artifactId>spring-boot-starter-security</artifactId>-->
-<!--		</dependency>-->
+<!--		security-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
 
 		<dependency>
 			<groupId>mysql</groupId>
